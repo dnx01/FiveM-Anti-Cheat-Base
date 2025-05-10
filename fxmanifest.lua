@@ -3,7 +3,7 @@
 fx_version 'cerulean'
 game 'gta5'
 
-author 'Your Name'
+author 'dnz'
 description 'Anti-Cheat System for FiveM'
 version '1.0.0'
 
