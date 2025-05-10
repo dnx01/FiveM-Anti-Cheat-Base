@@ -1,0 +1,13 @@
+{
+    "allowedVehicles": ["adder", "zentorno"],
+    "allowedObjects": ["prop_chair_01a", "prop_table_03"],
+    "restrictedZones": [
+        {"x": 100.0, "y": 200.0, "z": 300.0, "radius": 50.0}
+    ],
+    "allowedResources": ["essentialmode", "es_extended", "vMenu"],
+    "knownCipherPanels": ["adminpanel", "hackerpanel", "cheatmenu"],
+    "allowedWeapons": ["WEAPON_PISTOL", "WEAPON_KNIFE", "WEAPON_BAT"],
+    "adminSteamIDs": ["steam:010101010101010", "steam:010101010101010"],
+    "banFile": "ban.dnzac",
+    "whitelist": []
+}

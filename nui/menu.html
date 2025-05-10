@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Menu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .menu {
+            background: linear-gradient(135deg, #1e1e1e, #444);
+            padding: 20px;
+            border-radius: 15px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .menu h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #ffcc00;
+        }
+        .menu button {
+            background: #ffcc00;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .menu button:hover {
+            background: #e6b800;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <h1>Admin Menu</h1>
+        <button onclick="viewBans()">View Bans</button>
+        <button onclick="unbanPlayer()">Unban Player</button>
+        <button onclick="closeMenu()">Close</button>
+        <button onclick="toggleSettings()">Settings</button>
+        <button onclick="viewLogs()">View Logs</button>
+        <button onclick="manageWhitelist()">Manage Whitelist</button>
+        <button onclick="viewStats()">View Stats</button>
+
+        <div id="settings" style="display: none; margin-top: 20px;">
+            <h2>Settings</h2>
+            <button onclick="changeMaxSpeed()">Change Max Speed</button>
+            <button onclick="addRestrictedWeapon()">Add Restricted Weapon</button>
+        </div>
+
+        <div id="whitelist" style="display: none; margin-top: 20px;">
+            <h2>Whitelist Management</h2>
+            <button onclick="addToWhitelist()">Add to Whitelist</button>
+            <button onclick="removeFromWhitelist()">Remove from Whitelist</button>
+        </div>
+    </div>
+    <script>
+        function viewBans() {
+            fetch(`https://${GetParentResourceName()}/viewBans`, {
+                method: 'POST'
+            }).then(resp => resp.json()).then(data => {
+                alert('Bans:\n' + data.map(ban => `SteamID: ${ban.steamID}, Reason: ${ban.reason}`).join('\n'));
+            });
+        }
+
+        function unbanPlayer() {
+            const steamID = prompt('Enter SteamID to unban:');
+            if (steamID) {
+                fetch(`https://${GetParentResourceName()}/unbanPlayer`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ steamID })
+                }).then(() => alert('Player unbanned!'));
+            }
+        }
+
+        function closeMenu() {
+            fetch(`https://${GetParentResourceName()}/closeMenu`, {
+                method: 'POST'
+            });
+        }
+
+        function toggleSettings() {
+            const settingsDiv = document.getElementById('settings');
+            settingsDiv.style.display = settingsDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function changeMaxSpeed() {
+            const newSpeed = prompt('Enter new max speed:');
+            if (newSpeed) {
+                fetch(`https://${GetParentResourceName()}/changeMaxSpeed`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ maxSpeed: newSpeed })
+                }).then(() => alert('Max speed updated!'));
+            }
+        }
+
+        function addRestrictedWeapon() {
+            const weapon = prompt('Enter weapon to restrict:');
+            if (weapon) {
+                fetch(`https://${GetParentResourceName()}/addRestrictedWeapon`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ weapon })
+                }).then(() => alert('Weapon added to restricted list!'));
+            }
+        }
+
+        function viewLogs() {
+            fetch(`https://${GetParentResourceName()}/viewLogs`, {
+                method: 'POST'
+            }).then(resp => resp.json()).then(data => {
+                alert('Logs:\n' + data.map(log => `${log.timestamp}: ${log.message}`).join('\n'));
+            });
+        }
+
+        function manageWhitelist() {
+            const whitelistDiv = document.getElementById('whitelist');
+            whitelistDiv.style.display = whitelistDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addToWhitelist() {
+            const steamID = prompt('Enter SteamID to whitelist:');
+            if (steamID) {
+                fetch(`https://${GetParentResourceName()}/addToWhitelist`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ steamID })
+                }).then(() => alert('Player added to whitelist!'));
+            }
+        }
+
+        function removeFromWhitelist() {
+            const steamID = prompt('Enter SteamID to remove from whitelist:');
+            if (steamID) {
+                fetch(`https://${GetParentResourceName()}/removeFromWhitelist`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ steamID })
+                }).then(() => alert('Player removed from whitelist!'));
+            }
+        }
+
+        function viewStats() {
+            fetch(`https://${GetParentResourceName()}/viewStats`, {
+                method: 'POST'
+            }).then(resp => resp.json()).then(data => {
+                alert(`Stats:\nBanned Players: ${data.bannedPlayers}\nSuspicious Events: ${data.suspiciousEvents}`);
+            });
+        }
+    </script>
+</body>
+</html>
